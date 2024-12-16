@@ -1,69 +1,91 @@
-# Welcome to the Cash Flow Minimizer System README !!
+# Cash Flow Minimizer System
 
-This system minimizes the **number of transactions** among multiple banks in the different corners of the world that use **different modes of payment**. There is one world bank (with all payment modes) to act as an intermediary between banks that have no common mode of payment.
+## Overview
+The **Cash Flow Minimizer System** is a tool designed to minimize the number of financial transactions between multiple banks. It ensures that all payments are completed efficiently, even when banks use different payment modes, with the help of a central `World Bank` that supports all payment modes.
 
-# Getting Started
+---
 
-Let's take an example. say we have the following banks:
-1. Bank_of_America (World bank)
-2. Wells_Fargo
-3. Royal_Bank_of_Canada
-4. Westpac
-5. National_Australia_Bank
-6. Goldman_Sachs
+## Features
+- Calculates the net amount owed or to be received by each bank.
+- Handles payment transactions using different modes (`QuickPay`, `SafePay`, `FlexiTransfer`).
+- Uses a central `World Bank` as an intermediary for banks without common payment modes.
+- Outputs the minimized number of transactions and details of each transaction.
 
-Following are the payments to be done:\
-&emsp;&emsp;&emsp;    **Debtor Bank**&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;                **Creditor Bank** &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; **Amount**
-1. Goldman_Sachs   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;             Bank_of_America &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;             Rs 100
-2. Goldman_Sachs   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;              Wells_Fargo &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;                Rs 300
-3. Goldman_Sachs   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;              Royal_Bank_of_Canada  &emsp;&emsp;&emsp;&emsp;&nbsp;      Rs 100
-4. Goldman_Sachs   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;              Westpac &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp; Rs 100
-5. National_Australia_Bank &emsp;&emsp;&nbsp;&nbsp;       Bank_of_America &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp; Rs 300
-6. National_Australia_Bank &emsp;&emsp;&nbsp;&nbsp;       Royal_Bank_of_Canada &emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rs 100
-7. Bank_of_America         &emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;       Wells_Fargo &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp; Rs 400
-8. Wells_Fargo             &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;       Royal_Bank_of_Canada &emsp;&emsp;&emsp;&emsp;&nbsp; Rs 200
-9. Royal_Bank_of_Canada    &emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;      Westpac &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp; Rs 500
+---
 
+## Input
+1. **Number of Banks**: Total number of participating banks.
+2. **Bank Details**: For each bank:
+    - Bank name (no spaces).
+    - Number of payment modes.
+    - List of payment modes.
+3. **Number of Transactions**: Total number of transactions.
+4. **Transaction Details**: For each transaction:
+    - Debtor bank.
+    - Creditor bank.
+    - Amount to be transferred.
 
-This is represented below as a directed graph with the directed edge representing debts.
-![image](https://user-images.githubusercontent.com/54183085/110007387-9c625100-7d40-11eb-9128-29073ea4b3f3.png)
+---
 
-**But there's a catch!!**
-Each Bank only supports a set of modes of payments and can _make_ or _receive_ payments **only** via those. Only World Bank suppports **all** modes of payments.
-In our current example we have only three payment modes :
-1. Google_Pay
-2. AliPay
-3. Paytm
+## Output
+- Optimized list of transactions that minimize the number of transfers.
+- Details include:
+  - Amount.
+  - Debtor bank.
+  - Creditor bank.
+  - Payment mode.
 
-Following is the list of Banks and their supported payment modes :
-1. Bank_of_America &emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;- &emsp; Google_Pay, AliPay, Paytm
-2. Wells_Fargo &emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&emsp;&nbsp;- &emsp; Google_Pay, AliPay
-3. Royal_Bank_of_Canada &nbsp;&emsp;&nbsp;&nbsp;&nbsp;- &emsp; AliPay
-4. Westpac &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp; - &emsp; Google_Pay, Paytm
-5. Goldman_Sachs &emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;- &emsp; Paytm
-6. National_Australia_Bank &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &emsp; AliPay, Paytm  
+---
 
-To pick the first Bank, we calculate the **net amount** for every Bank by using the below formula and store them in list:
+## How to Run
+### Prerequisites
+- A C++ compiler (e.g., `g++`).
 
-net amount = [Sum of all **credits**(_amounts to be received_)] - [Sum of all **debits**(_amounts to pay_)]
+### Steps
+1. Clone the repository or download the source code.
+2. Compile the code using the following command:
+   ```bash
+   g++ cash_flow_minimizer.cpp -o cash_flow_minimizer
+   ```
+3. Run the executable:
+   ```bash
+   ./cash_flow_minimizer
+   ```
+4. Follow the prompts to enter the required inputs.
 
-Now the idea is that we are finding the bank which has _minimum_ net amount(_max debtor_) (_say Bank X, net amount x_) and then finding the bank which has the _maximum_ net amount( _max creditor_) (_say Bank Y, net amount y_) and also has a common payment mode (_say M1_) with the former bank. Then we find _minimum_ of absolute value of x and y, lets call it z.\
-Now X pays the amount z to Y. Then 3 cases may arrived:
-1. If (magnitude of x) < y  =>  X is completely settled and so removed from the list.
-2. If (magnitude of x) > y  =>  Y is completely settled and so removed from the list.
-3. If (magnitude of x) = y  =>  X and Y both are completely settled and so both are removed from the list.
+---
 
-The same process is repeated for the remaining banks.\
-For the current example, the transactions for minimum cash flow are as follows:
+## Example Usage
+### Input
+```
+Number of Banks: 3
+Bank Details:
+  - Bank 1: Alpha, 2 modes (QuickPay, SafePay)
+  - Bank 2: Beta, 1 mode (FlexiTransfer)
+  - Bank 3: WorldBank, 3 modes (QuickPay, SafePay, FlexiTransfer)
 
-![image](https://user-images.githubusercontent.com/54183085/110007435-aab06d00-7d40-11eb-8e0c-ea5c7ec762a3.png)
+Number of Transactions: 2
+Transactions:
+  - Alpha pays Beta Rs 100
+  - Beta pays Alpha Rs 50
+```
 
-So this is the required answer.
+### Output
+```
+The transactions for minimum cash flow are as follows:
+Alpha pays Rs50 to Beta via QuickPay
+```
 
-# How to Use?
-This system is completely **menu-driven**. So when you will run the C++ Application, it will guide you and show you the final output.\
-Below is the execution of our current example:
-![image](https://user-images.githubusercontent.com/54183085/110011598-a33f9280-7d45-11eb-9499-a2868924cefd.png)
+---
 
-Thank you!!
-Happy learning :)
+## Code Structure
+- **`bank` class**: Stores information about each bank.
+- **`getMinIndex()`**: Finds the bank with the minimum net amount.
+- **`getMaxIndex()`**: Finds the bank with the maximum net amount.
+- **`printAns()`**: Outputs the minimized transactions.
+- **`minimizeCashFlow()`**: Core logic for minimizing cash flow using the Greedy algorithm.
+
+---
+
+## Contact
+For any queries or feedback, please contact the developer.
